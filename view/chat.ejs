@@ -1,8 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Socket.IO chat</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <% include partials/head %>
   </head>
   <body>
     <ul id="messages"></ul>
@@ -10,7 +9,7 @@
     <form action="">
       <input id="m" autocomplete="off" /><button>Send</button>
     </form>
-    <script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
+    <% include partials/foot %>
     <script src="/socket.io/socket.io.js"></script>
     <script>
         $(document).ready(function() {
