@@ -6,9 +6,6 @@ var url = require('url');
 var ejs = require('ejs');
 var url_parts;
 
-ejs.open = '{{'; 
-ejs.close = '}}';
-
 app.set('strict routing', true);
 
 // redirect if with trailing slash

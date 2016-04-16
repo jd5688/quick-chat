@@ -4,11 +4,17 @@
     <% include partials/head %>
   </head>
   <body>
-    <ul id="messages"></ul>
-    <ul id="typing"><br></ul>
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
-    </form>
+    <% include partials/navbar %>
+      <div class="row">
+        <div class="col-sm-12">
+            <ul id="messages"></ul>
+            <ul id="typing"><br></ul>
+            <form action="">
+              <input id="m" autocomplete="off" /><button>Send</button>
+            </form>
+        </div>
+      </div>
+
     <% include partials/foot %>
     <script src="/socket.io/socket.io.js"></script>
     <script>
