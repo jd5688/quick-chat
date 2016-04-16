@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <ul id="typing"><br></ul>
+    <form action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        $(document).ready(function() {
+            var site = 'http://localhost:3000/';
+            var uid = getUrlVars()["id"];
+            var uname = '';
+            var socket = io();
+            var sw = 0;
+            var el, message;
+
+            // do some ajax query to fetch my username
+            $.get( site + "getUser", { id : uid }, function( data ) {
+                uname = data;
+            });
+   
+            $('form').submit(function(e){
+                e.preventDefault();
+                message = $('#m').val();
+                socket.emit('chat message', { user: uname, message: message });
+                $('#m').val('');
+                return false;
+            });
+
+            // create an element for each valid user that comes in
+            socket.on('log user', function(user){
+                el = document.createElement("p");
+                el.setAttribute("id", user);
+                $('#typing').append(el);
+            });
+
+            socket.on('chat message', function(msg){
+                $('#messages').append($('<li>').text(msg.user + ': ' + msg.message));
+            });
+
+            // indicate when a user is typing a message
+            socket.on('typing a message', function(msg){
+                var id = msg.user;
+                if (msg.status === 'off') {
+                    $('p#' + id).remove();
+                } else {
+                    el = document.createElement("p");
+                    el.setAttribute("id", id);
+                    $('#typing').append(el);
+                    $(el).html(id + ' is typing...');
+                }
+            });
+
+            // check for keypressed
+            $('#m').keyup(function (e) {
+                var str = $('#m').val();
+
+                if (str !== '') {
+                    if (sw === 0) {
+                      sw = 1;
+                      // emit
+                      socket.emit('typing a message', { user: uname, status: 'on'});
+                    }
+                } else {
+                  sw = 0;
+                  socket.emit('typing a message', { user: uname, status: 'off'});
+                }
+            });
+
+            function getUrlVars() {
+                var vars = [], hash;
+                var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+                for(var i = 0; i < hashes.length; i++)
+                {
+                    hash = hashes[i].split('=');
+                    vars.push(hash[0]);
+                    vars[hash[0]] = hash[1];
+                }
+                return vars;
+            }
+        });        
+    </script>
+  </body>
+</html>
