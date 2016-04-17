@@ -16,7 +16,7 @@
   			<div class="col-md-6 col-sm-12">
 	  			<div class="form-group">
 					 <label for="num_people">How Many People?</label>
-					 <input type="number" min="1" max="20" class="form-control" id="num_people" placeholder="Number of people joining the chat?"></input>
+					 <input type="number" min="1" max="20" class="form-control" id="num_people" name="num_people" placeholder="Number of people joining the chat?"></input>
           </div>
           <span id="people">
             
@@ -68,6 +68,10 @@
           input.setAttributeNode(att);
 
           att = document.createAttribute("id");
+          att.value = "person" + c;
+          input.setAttributeNode(att);
+
+          att = document.createAttribute("name");
           att.value = "person" + c;
           input.setAttributeNode(att);
 
