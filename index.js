@@ -23,8 +23,8 @@ http.listen(3000, function () {
 });
 
 app.get('/', function (req, res) {
-	//res.sendfile(__dirname + '/view/index.ejs');
-	res.render(__dirname + '/view/index');
+	var data = { base_url: "http://localhost:3000" };
+	res.render(__dirname + '/view/index', data);
 });
 
 app.get('/chat', function (req, res) {

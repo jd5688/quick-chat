@@ -1,11 +1,94 @@
 <!doctype html>
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="style.css">
     <% include partials/head %>
   </head>
   <body>
-    <% include partials/navbar %>
+  	<% include partials/navbar %>
+  	<div class="container">
+  		<div class="row">
+  			<div class="col-md-6 col-sm-12">
+  				<h1>Create Chat Room</h1>
+  			</div>
+  		</div>
+  		<form action="<%= base_url %>/createchat" method="post">
+  		<div class="row">
+  			<div class="col-md-6 col-sm-12">
+	  			<div class="form-group">
+					 <label for="num_people">How Many People?</label>
+					 <input type="number" min="1" max="20" class="form-control" id="num_people" placeholder="Number of people joining the chat?"></input>
+          </div>
+          <span id="people">
+            
+          </span>
+          <div class="form-group">
+            <input type="submit" id="submit" value="Create"/>
+          </div>
+				</div>
+			</div>
+      <div class="row">
+        
+      </div>
+   		</div>
+  		</form>
+  	</div>
     <% include partials/foot %>
+    <script>
+    $(document).ready(function() {
+      var div, c;
+    	$('#num_people').keyup(function () {
+        var num_people = parseInt($('#num_people').val());
+
+        if (isNaN(num_people) || num_people === 0 || num_people > 20) { return; };
+        if (div) {
+          $('#people').empty();
+        };
+
+        // create additional elements
+        c = 0;
+        for (var i = 0; i < num_people; i += 1) {
+          var text, att;
+          c++;
+          div = document.createElement("div");
+          var label = document.createElement("label");
+          var input = document.createElement("input");
+
+          att = document.createAttribute("class");
+          att.value = "form-group";
+          div.setAttributeNode(att);
+          text = document.createTextNode("Name of Person " + c);
+          label.appendChild(text);
+          
+          att = document.createAttribute("type");
+          att.value = "text";
+          input.setAttributeNode(att);
+
+          att = document.createAttribute("class");
+          att.value = "form-control";
+          input.setAttributeNode(att);
+
+          att = document.createAttribute("id");
+          att.value = "person" + c;
+          input.setAttributeNode(att);
+
+          att = document.createAttribute("placeholder");
+          att.value = "Name of person " + c + "?";
+          input.setAttributeNode(att);
+
+          att = document.createAttribute("required");
+          input.setAttributeNode(att);
+
+          att = document.createAttribute("pattern");
+          att.value = "\[a-zA-Z0-9\]\+";
+          input.setAttributeNode(att);
+
+          div.appendChild(label);
+          div.appendChild(input);
+
+          $('#people').append(div);
+        }
+      })
+    })
+    </script>
   </body>
 </html>
