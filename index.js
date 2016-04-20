@@ -6,8 +6,13 @@ var url = require('url');
 var ejs = require('ejs');
 var bodyParser = require("body-parser");
 var config = config = require("./includes/config");
+var chatRoom = require("./modules/chatroom");
+var mongoose = require('mongoose');
 var url_parts;
 var data = { base_url: config.base_url };
+
+//connect to db
+mongoose.connect(config.db.url);
 
 app.set('strict routing', true);
 
@@ -51,7 +56,7 @@ app.get('/getUser', function (req, res) {
 // accept user-submitted post data to create a new chat room
 app.post('/createchat', function (req, res) {
   	var params = req.body;
-	//console.log(params);
+  	chatRoom.createRoom(params);
 	res.render(__dirname + '/view/createchat', data);
 });
 
