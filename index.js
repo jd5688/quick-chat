@@ -8,6 +8,7 @@ var bodyParser = require("body-parser");
 var config = config = require("./includes/config");
 var chatRoom = require("./modules/chatroom");
 var mongoose = require('mongoose');
+var session = 'n0tchatt1ng';
 var url_parts;
 var data = { base_url: config.base_url };
 
@@ -43,7 +44,11 @@ app.get('/', function (req, res) {
 app.get('/chat', function (req, res) {
 	// sendFile (capital F) does not work with socket.io
 	//res.sendfile(__dirname + '/view/chat.ejs');
-	res.render(__dirname + '/view/chat', data);
+	url_parts = url.parse(req.url, true);
+	chatRoom.verify(url_parts.query, function (ret) {
+		console.log(ret);
+		res.render(__dirname + '/view/chat', data);
+	});
 });
 
 // get and verify user id (nickname) and return back the user id if valid or
@@ -56,8 +61,21 @@ app.get('/getUser', function (req, res) {
 // accept user-submitted post data to create a new chat room
 app.post('/createchat', function (req, res) {
   	var params = req.body;
-  	chatRoom.createRoom(params);
-	res.render(__dirname + '/view/createchat', data);
+  	chatRoom.createRoom(params, function (ret) {
+	  	data.urls = chatRoom.getUrls();
+	  	data.members = chatRoom.getMembers();
+	  	data.status = ret;
+
+	  	if (ret === 'success') {
+	  		data.cla = 'bg-primary';
+	  		data.message = "Chatroom has been successfully created!";
+	  	} else {
+	  		data.cla = 'bg-danger';
+	  		data.message = "Chatroom was not successfully created. Try again."
+	  	};
+
+	 	res.render(__dirname + '/view/createchat', data);
+	});
 });
 
 io.on('connection', function(socket) {
