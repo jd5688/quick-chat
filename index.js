@@ -46,17 +46,24 @@ app.get('/chat', function (req, res) {
 	//res.sendfile(__dirname + '/view/chat.ejs');
 	url_parts = url.parse(req.url, true);
 	chatRoom.verify(url_parts.query, function (ret) {
-		console.log(ret);
-		res.render(__dirname + '/view/chat', data);
+		if (ret === 'success') {
+			// set session for this chat.
+			session = url_parts.query.room; 
+			res.render(__dirname + '/view/chat', data);
+		} else {
+			res.render(__dirname + '/view/chatfail', data);
+		}
 	});
 });
 
+/*
 // get and verify user id (nickname) and return back the user id if valid or
 // send an error message if invalid user
 app.get('/getUser', function (req, res) {
 	url_parts = url.parse(req.url, true);
 	res.end(url_parts.query.id);
 })
+*/
 
 // accept user-submitted post data to create a new chat room
 app.post('/createchat', function (req, res) {
@@ -85,15 +92,15 @@ io.on('connection', function(socket) {
 	    console.log('user disconnected');
 	});
 
-	socket.on('chat message', function(msg){
-	    io.emit('chat message', msg);
+	socket.on(session + ' chat message', function(msg){
+	    io.emit(session + ' chat message', msg);
 	});
 
-	socket.on('typing a message', function(data) {
-		io.emit('typing a message', data);
+	socket.on(session + ' typing a message', function(data) {
+		io.emit(session + ' typing a message', data);
 	});
 
-	socket.on('log user', function (user) {
-		io.emit('log user', user);
+	socket.on(session + ' log user', function (user) {
+		io.emit(session + ' log user', user);
 	})
 });

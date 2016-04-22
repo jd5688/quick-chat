@@ -54,24 +54,26 @@ ChatRoom.prototype.getMembers = function () {
 ChatRoom.prototype.verify = function (params, callback) {
 	var dat = Cmod.find({
 	  	id : params.room,
-	  }).select({ members_list: 1});
+	  }).select({ members_list: 1, id: 1});
 	
 	dat.exec(function (err, data) {
 	  if (err) {
 	  	throw err;
 	  };
 
-	  console.log(data.members_list);
-
-	  /*
-	  for (var i = 0; i < data.members_list.length; i += 1) {
-	  	if (data.members_list[i] === params.id) {
+	  var j = 0;
+	  for (var i = 0; i < data[0].members_list.length; i += 1) {
+	  	j += 1;
+	  	if (data[0].members_list[i] === params.name) {
 	  		callback('success');
+	  		break;
 	  	} else {
-	  		callback('fail');
+	  		console.log(params.id + ' = ' + data[0].members_list[i]);
+	  		if (data[0].members_list.length === j) {
+	  			callback('fail');
+	  		}
 	  	}
-	  }
-	  */
+	  };
 	});
 };
 

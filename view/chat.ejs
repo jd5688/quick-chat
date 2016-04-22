@@ -21,38 +21,42 @@
     <script>
         $(document).ready(function() {
             var site = 'http://localhost:3000/';
-            var uid = getUrlVars()["id"];
-            var uname = '';
+            var uname = getUrlVars()["name"];
+            var id = uname;
+            var session = getUrlVars()["room"];
+            console.log(session);
             var socket = io();
             var sw = 0;
             var el, message;
 
+            /*
             // do some ajax query to fetch my username
             $.get( site + "getUser", { id : uid }, function( data ) {
                 uname = data;
             });
-   
+            */
+
             $('form').submit(function(e){
                 e.preventDefault();
                 message = $('#m').val();
-                socket.emit('chat message', { user: uname, message: message });
+                socket.emit(session + ' chat message', { user: uname, message: message });
                 $('#m').val('');
                 return false;
             });
 
             // create an element for each valid user that comes in
-            socket.on('log user', function(user){
+            socket.on(session + ' log user', function(user){
                 el = document.createElement("p");
                 el.setAttribute("id", user);
                 $('#typing').append(el);
             });
 
-            socket.on('chat message', function(msg){
+            socket.on(session + ' chat message', function(msg){
                 $('#messages').append($('<li>').text(msg.user + ': ' + msg.message));
             });
 
             // indicate when a user is typing a message
-            socket.on('typing a message', function(msg){
+            socket.on(session + ' typing a message', function(msg){
                 var id = msg.user;
                 if (msg.status === 'off') {
                     $('p#' + id).remove();
@@ -72,11 +76,11 @@
                     if (sw === 0) {
                       sw = 1;
                       // emit
-                      socket.emit('typing a message', { user: uname, status: 'on'});
+                      socket.emit(session + ' typing a message', { user: uname, status: 'on'});
                     }
                 } else {
                   sw = 0;
-                  socket.emit('typing a message', { user: uname, status: 'off'});
+                  socket.emit(session + ' typing a message', { user: uname, status: 'off'});
                 }
             });
 
