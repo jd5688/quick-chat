@@ -35,7 +35,7 @@ app.use(bodyParser.urlencoded({
 app.set('view engine', 'ejs');
 
 http.listen(3000, function () {
-	console.log('Example app listening on port 3000!');
+	console.log('Chat app listening on port 3000!');
 });
 
 app.get('/', function (req, res) {
