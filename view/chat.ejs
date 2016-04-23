@@ -9,7 +9,8 @@
       <div class="row">
         <div class="col-sm-12">
             <ul id="messages"></ul>
-            <ul id="typing"><br></ul>
+            <ul id="typing"><br><br></ul>
+            <ul><br><br><br><br></ul>
             <form action="">
               <input id="m" autocomplete="off" /><button>Send</button>
             </form>
@@ -36,6 +37,7 @@
                 message = m.val();
                 socket.emit('chat message', { room: session, user: uname, message: message });
                 m.val('');
+                window.scrollTo(0,document.body.scrollHeight);
                 return false;
             });
 
