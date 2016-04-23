@@ -27,6 +27,10 @@
             var socket = io();
             var sw = 0;
             var el, message;
+            var m = $('#m');
+            var messages = $('#messages');
+            var typing = $('#typing');
+
 
             /*
             // do some ajax query to fetch my username
@@ -37,9 +41,9 @@
 
             $('form').submit(function(e){
                 e.preventDefault();
-                message = $('#m').val();
+                message = m.val();
                 socket.emit('chat message', { room: session, user: uname, message: message });
-                $('#m').val('');
+                m.val('');
                 return false;
             });
 
@@ -53,7 +57,7 @@
             */
 
             socket.on(session + ' chat message', function(msg){
-                $('#messages').append($('<li>').text(msg.user.toUpperCase() + ': ' + msg.message));
+                messages.append($('<li>').text(msg.user.toUpperCase() + ': ' + msg.message));
             });
 
             // indicate when a user is typing a message
@@ -64,14 +68,14 @@
                 } else {
                     el = document.createElement("p");
                     el.setAttribute("id", id);
-                    $('#typing').append(el);
+                    typing.append(el);
                     $(el).html(id.toUpperCase() + ' is typing...');
                 }
             });
 
             // check for keypressed
-            $('#m').keyup(function (e) {
-                var str = $('#m').val();
+            m.keyup(function (e) {
+                var str = m.val();
 
                 if (str !== '') {
                     if (sw === 0) {
