@@ -24,7 +24,6 @@
             var uname = getUrlVars()["name"];
             var id = uname;
             var session = getUrlVars()["room"];
-            console.log(session);
             var socket = io();
             var sw = 0;
             var el, message;
@@ -39,20 +38,22 @@
             $('form').submit(function(e){
                 e.preventDefault();
                 message = $('#m').val();
-                socket.emit(session + ' chat message', { user: uname, message: message });
+                socket.emit('chat message', { room: session, user: uname, message: message });
                 $('#m').val('');
                 return false;
             });
 
+            /*
             // create an element for each valid user that comes in
             socket.on(session + ' log user', function(user){
                 el = document.createElement("p");
                 el.setAttribute("id", user);
                 $('#typing').append(el);
             });
+            */
 
             socket.on(session + ' chat message', function(msg){
-                $('#messages').append($('<li>').text(msg.user + ': ' + msg.message));
+                $('#messages').append($('<li>').text(msg.user.toUpperCase() + ': ' + msg.message));
             });
 
             // indicate when a user is typing a message
@@ -64,7 +65,7 @@
                     el = document.createElement("p");
                     el.setAttribute("id", id);
                     $('#typing').append(el);
-                    $(el).html(id + ' is typing...');
+                    $(el).html(id.toUpperCase() + ' is typing...');
                 }
             });
 
@@ -76,11 +77,11 @@
                     if (sw === 0) {
                       sw = 1;
                       // emit
-                      socket.emit(session + ' typing a message', { user: uname, status: 'on'});
+                      socket.emit('typing a message', { room: session, user: uname, status: 'on'});
                     }
                 } else {
                   sw = 0;
-                  socket.emit(session + ' typing a message', { user: uname, status: 'off'});
+                  socket.emit('typing a message', { room: session, user: uname, status: 'off'});
                 }
             });
 

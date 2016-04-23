@@ -9,7 +9,7 @@ var config = config = require("./includes/config");
 var chatRoom = require("./modules/chatroom");
 var mongoose = require('mongoose');
 var session = 'n0tchatt1ng';
-var url_parts;
+var url_parts, nsp;
 var data = { base_url: config.base_url };
 
 //connect to db
@@ -86,21 +86,21 @@ app.post('/createchat', function (req, res) {
 });
 
 io.on('connection', function(socket) {
-	console.log('a user connected');
-
 	socket.on('disconnect', function(){
 	    console.log('user disconnected');
 	});
 
-	socket.on(session + ' chat message', function(msg){
-	    io.emit(session + ' chat message', msg);
+	socket.on('chat message', function(msg){
+	    io.emit(msg.room + ' chat message', msg);
 	});
 
-	socket.on(session + ' typing a message', function(data) {
-		io.emit(session + ' typing a message', data);
+	socket.on('typing a message', function(data) {
+		io.emit(data.room + ' typing a message', data);
 	});
 
-	socket.on(session + ' log user', function (user) {
-		io.emit(session + ' log user', user);
+	/*
+	socket.on('log user', function (user) {
+		io.emit('log user', user);
 	})
+	*/
 });

@@ -24,7 +24,7 @@ ChatRoom.prototype.createRoom = function (params, callback) {
 
 	for (var i = 1; i <= this.num_members; i += 1) {
 		this.members.push(params['person' + i]);
-		this.members_url[params['person' + i]] = config.base_url + "/chat?room=" + this.room + "&id=" + params['person' + i];
+		this.members_url[params['person' + i]] = config.base_url + "/chat?room=" + this.room + "&name=" + params['person' + i];
 	}
 
 	cmod.id = this.room;
@@ -50,7 +50,7 @@ ChatRoom.prototype.getMembers = function () {
 	return this.members;
 };
 
-// params = { room : 1461220853754, id: 'me' };
+// params = { room : 1461220853754, name: 'me' };
 ChatRoom.prototype.verify = function (params, callback) {
 	var dat = Cmod.find({
 	  	id : params.room,
@@ -61,19 +61,12 @@ ChatRoom.prototype.verify = function (params, callback) {
 	  	throw err;
 	  };
 
-	  var j = 0;
-	  for (var i = 0; i < data[0].members_list.length; i += 1) {
-	  	j += 1;
-	  	if (data[0].members_list[i] === params.name) {
-	  		callback('success');
-	  		break;
-	  	} else {
-	  		console.log(params.id + ' = ' + data[0].members_list[i]);
-	  		if (data[0].members_list.length === j) {
-	  			callback('fail');
-	  		}
-	  	}
-	  };
+	  // check if user is on the members_list array
+	  if (data[0].members_list.indexOf(params.name) !== -1) {
+	  	callback('success');
+	  } else {
+	  	callback('fail');
+	  }
 	});
 };
 
