@@ -31,14 +31,6 @@
             var messages = $('#messages');
             var typing = $('#typing');
 
-
-            /*
-            // do some ajax query to fetch my username
-            $.get( site + "getUser", { id : uid }, function( data ) {
-                uname = data;
-            });
-            */
-
             $('form').submit(function(e){
                 e.preventDefault();
                 message = m.val();
@@ -46,15 +38,6 @@
                 m.val('');
                 return false;
             });
-
-            /*
-            // create an element for each valid user that comes in
-            socket.on(session + ' log user', function(user){
-                el = document.createElement("p");
-                el.setAttribute("id", user);
-                $('#typing').append(el);
-            });
-            */
 
             socket.on(session + ' chat message', function(msg){
                 messages.append($('<li>').text(msg.user.toUpperCase() + ': ' + msg.message));
